@@ -1,5 +1,6 @@
 class Config:
-    pass
+    DATABASE_NAME = 'catalog_db'
+    DATABASE_USER = 'anonymous_user'
 
 class DevelopmentConfig(Config):
     DEBUG = True
