@@ -81,6 +81,17 @@ def products_by_id(product_ID):
         return jsonify(product_json)
     return jsonify({'error':404, 'message':'Resource not found'}), 404
 
+@page.route('/products/add', methods=['POST'])
+def add_product():
+    db.config_engine(user='catalog_admin', password='adminpassword') # this line will be removed
+    sku = request.json['sku']
+    product_name = request.json['product_name']
+    product_price = request.json['product_price']
+    brand = request.json['brand']
+    new_product = Product(sku, product_name, product_price, brand)
+    notify = new_product.save(db)
+    return jsonify(notify)
+
 @page.route('/products/update/<product_ID>', methods=['PUT'])
 def update_product(product_ID):
     db.config_engine(user='catalog_admin', password='adminpassword') # this line will be removed

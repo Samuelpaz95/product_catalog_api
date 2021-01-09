@@ -38,6 +38,25 @@ class Product(Base):
         self.product_name = product_name
         self.product_price = product_price
         self.brand = brand
+
+    def save(self, db:Database) -> dict:
+        existing_products = db.session.query(Product).filter_by(sku=self.sku).all()
+        notify = self.create_notify(existing_products)
+        if not existing_products:
+            db.session.add(self)
+            db.session.commit()
+        return notify
+
+    def create_notify(self, existing_products):
+        notify = {
+            'done': True,
+            'message': 'Successfully registered product'
+        }
+        if existing_products:
+            notify['done'] = False
+            notify['message'] = 'Product is already registered'
+        return notify
+    
     def to_json(self) -> dict:
         product_json = self.__dict__.copy()
         product_json.pop(list(product_json.keys())[0])
