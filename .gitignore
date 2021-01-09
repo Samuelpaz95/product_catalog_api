@@ -2,3 +2,5 @@ __pycache__
 .vscode
 app/__pycache__
 env
+old
+autentication
