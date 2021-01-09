@@ -59,6 +59,7 @@ Create a database called "catalog_db" and two users, one with the permission to 
 mysql -u root -p < database/create_tables.sql
 ```
 Create the necessary tables that the API will use
+
 ![tables](.github/images/tables.png)
 ![columns](.github/images/table_columns.png)
 ```sh
