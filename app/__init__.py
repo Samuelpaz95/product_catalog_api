@@ -3,7 +3,6 @@ from flask_login import LoginManager
 from .views import page, db
 
 APP = Flask(__name__)
-
 login_manager = LoginManager()
 
 

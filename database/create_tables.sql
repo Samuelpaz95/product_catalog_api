@@ -1,10 +1,9 @@
 USE catalog_db;
-
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE product (
-    porduct_ID INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_ID INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     sku VARCHAR(30) NOT NULL UNIQUE,
     product_name VARCHAR(100) NOT NULL,
     product_price DOUBLE,
@@ -17,5 +16,5 @@ CREATE TABLE user (
     username VARCHAR (30) NOT NULL UNIQUE,
     password VARCHAR (30) NOT NULL,
     email VARCHAR (100) NOT NULL UNIQUE,
-    user_level INT(1) NOT NULL,
+    user_level INT(1) NOT NULL
 )
