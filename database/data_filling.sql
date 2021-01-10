@@ -7,6 +7,6 @@ VALUES ('SPORT-XYZ-BLN-41', 'sports shoe', 99.99, 'Nike'),
        ('ELECT-ITE-UWU-12', 'Notebook', 812.00, 'HP Notebooks');
 
 INSERT INTO user (full_name, username, password, email, user_level)
-VALUES ('El Administrador', 'admin', 'password', "fake_email@gmail.com", 0),
-       ('the Admin', 'other_admin', 'password2', "other_fake_email@gmail.com", 0)
+VALUES ('El Administrador', 'admin', 'pbkdf2:sha256:150000$KI8UCkD0$383222dbb7d388968cf749fa37d62d64ed33177beb91ff829d8fb8cee32937f9', "fake_email@gmail.com", 0),
+       ('the Admin', 'other_admin', 'pbkdf2:sha256:150000$tSLbrKO0$0cf954584feb8c5143c9cda9a60d787a2c762a45004e846646a4ae9a328d852c', "other_fake_email@gmail.com", 0)
        

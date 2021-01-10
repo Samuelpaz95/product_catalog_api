@@ -1,37 +1,42 @@
+from datetime import timedelta
 from flask import Flask
 from flask import jsonify
-import jwt
-import uuid
-import datetime
-from flask_login import LoginManager
+from flask.globals import session
 from flask_restful import Api
-from functools import wraps
 
 from .products import ProductListResource, ProductResource
 from .users import UserListResource, UserResource
 from .common.error_handling import AppErrorBaseClass, ObjectNotFound
 from .common import resource_bp
+from .views import page, login_manager
 from .db_conncetion import db
 
 APP = Flask(__name__)
-login_manager = LoginManager()
 api = Api(resource_bp)
 
 def create_app(config) -> Flask:
     APP.config.from_object(config)
 
     APP.register_blueprint(resource_bp)
+    APP.register_blueprint(page)
 
     Api(APP, catch_all_404s=True)
 
-    db.config_engine(user=config.DATABASE_USER, password='')
+    db.init_app(APP)
     login_manager.init_app(APP)
+    login_manager.needs_refresh_message = (u"Session timedout, please re-login")
+    login_manager.needs_refresh_message_category = "info"
 
-    init_resources(api)
     
+    init_resources(api)
     if config.DEBUG:
         register_error_handlers(APP)
     return APP
+
+@APP.before_request
+def before_request():
+    session.permanent = True
+    APP.permanent_session_lifetime = timedelta(minutes=1)
 
 def init_resources(api):
     api.add_resource(ProductListResource, '/api/products/')

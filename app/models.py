@@ -1,5 +1,8 @@
+from typing import Any
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
+from flask_login import UserMixin
 
 Base = declarative_base()
 class Product(Base):
@@ -26,7 +29,7 @@ class Product(Base):
     def __str__(self) -> str:
         return f'{self.product_name}'
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = 'user'
     user_ID = Column(Integer, nullable=False, primary_key=True)
     full_name = Column(String(100), nullable=False)
@@ -37,19 +40,30 @@ class User(Base):
     def __init__(self, full_name:str, username:str, password:str, email:str, user_level:int=0):
         self.full_name = full_name
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password)
         self.email = email
         self.user_level = user_level
+    
+    def verify_password(self, password:str) -> bool:
+        return check_password_hash(self.password, password)
+
     def to_json(self) -> dict:
         result = {
             'user_ID': self.user_ID,
             'full_name': self.full_name,
-            'password': self.password,
             'email': self.email
         }
         return result
+
     def attributes(self) -> list:
-        return list(self.__dict__.keys())[1:]
+        attributes = list(self.__dict__.keys())[1:]
+        attributes.remove('password')
+        attributes.append('password')
+        return attributes
+
+    def get_id(self):
+        return str(self.user_ID)
+
     def __repr__(self)-> str:
         return f'User{self.username}'
     def __str__(self) -> str:
