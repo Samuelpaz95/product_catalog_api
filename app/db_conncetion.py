@@ -14,13 +14,7 @@ class Database:
     
     def init_app(self, app:Flask):
         self.app = app
-        self.config_engine(app.config['DATABASE_USER'], '')
-
-    def switch_to_admin(self):
-        self.config_engine(self.app.config['DATABASE_ADMIN_USER'], self.app.config['DATABASE_ADMIN_PASSWORD'])
-    
-    def switch_to_anonymous(self):
-        self.init_app(self.app)
+        self.config_engine(app.config['DATABASE_USER'], app.config['DATABASE_PASSWORD'])
 
     def config_engine(self, user:str, password:str) -> None:
         self.__engine = create_engine(self.uri.format(user=user, password=password))
@@ -39,7 +33,7 @@ class Database:
     def update(self, cls:Base, id_field:int, data:dict) -> int:
         rows_affected = 0
         try:
-            product = self.__session.query(cls).filter_by(**{f"{cls.__tablename__}_ID":id_field})
+            product = self.__session.query(cls).filter_by(**{cls.id_name:id_field})
             rows_affected = product.update(data)
             self.__session.commit()
         except Exception as error:
@@ -63,5 +57,30 @@ class Database:
 
     def get_by(self, cls:Base, **kwargs:dict):
         return self.__session.query(cls).filter_by(**kwargs).all()
+    
+    def call_procedure(self, procedure_name:str, **kparameters) -> dict:
+        """Call a stored procedure that returns nothing
+
+        Arguments:
+
+            procedure_name (str): The stored procedure name.
+            kparameters (dict): (optional) The procedure parameters parameters.
+
+        Returns:
+
+            A `dict`:
+                --`keys`: A `list` of the fields of a table.
+                --`data`: the rows of the table.
+
+        """
+        if kparameters:
+            parameters = ''.join(list(map(lambda arg: ", :"+arg, list(kparameters.keys()))))[2:]
+            query = self.__session.execute(f'CALL {procedure_name}({parameters})', kparameters)
+        else: 
+            query = self.__session.execute(f'CALL {procedure_name}()')
+        return {
+            "keys": query.keys(),
+            "data": query.fetchall()
+        }
 
 db = Database()

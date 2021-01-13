@@ -51,25 +51,22 @@ In the folder "database" there are 3 SQL files to create the database and the ta
 
 run these files with a database root user, for example:
 ```sh
-# create databes
+# create database
 mysql -u root -p < database/create_database.sql
-```
-Create a database called "catalog_db" and two users, one with the permission to do SELECT, INSERT, UPDATE, DELETE and another that can only do SELECT
-```sh
+# create tables
 mysql -u root -p < database/create_tables.sql
+# create stored procedures
+mysql -u root -p < database/stored_procedures.sql
 ```
-Create the necessary tables that the API will use
+Create a database called "catalog_db" and two users, one with the permission to do SELECT, INSERT, UPDATE, DELETE. Create the necessary tables that the API will use and and create the necessary stored procedures.
+![columns](.github/images/ERM_CatalogDB.png)
 
-![tables](.github/images/tables.png)
-![columns](.github/images/table_columns.png)
 ```sh
 mysql -u root -p < database/data_filling.sql
 ```
 insert some records to be able to query them from the API
 ![columns](.github/images/data.png)
-
-
-
+```
 ### Run server
 we have everything ready, we run the program
 run:

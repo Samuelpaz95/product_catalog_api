@@ -1,4 +1,3 @@
-from typing import Any
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
@@ -7,6 +6,7 @@ from flask_login import UserMixin
 Base = declarative_base()
 class Product(Base):
     __tablename__ = 'product'
+    id_name = 'product_ID'
     product_ID = Column(Integer, nullable=False, primary_key=True)
     sku = Column(String(30), nullable=False, unique=True)
     product_name = Column(String(100), nullable=False)
@@ -31,6 +31,7 @@ class Product(Base):
 
 class User(Base, UserMixin):
     __tablename__ = 'user'
+    id_name = 'user_ID'
     user_ID = Column(Integer, nullable=False, primary_key=True)
     full_name = Column(String(100), nullable=False)
     username = Column(String(30), nullable=False, unique=True)
@@ -51,6 +52,7 @@ class User(Base, UserMixin):
         result = {
             'user_ID': self.user_ID,
             'full_name': self.full_name,
+            'username': self.username,
             'email': self.email
         }
         return result

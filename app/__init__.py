@@ -1,10 +1,10 @@
 from datetime import timedelta
 from flask import Flask
-from flask import jsonify
-from flask.globals import session
+from flask import jsonify, session
 from flask_restful import Api
 
 from .products import ProductListResource, ProductResource
+from .notifications import NotificationListResource, NotificationResource
 from .users import UserListResource, UserResource
 from .common.error_handling import AppErrorBaseClass, ObjectNotFound
 from .common import resource_bp
@@ -27,22 +27,22 @@ def create_app(config) -> Flask:
     login_manager.needs_refresh_message = (u"Session timedout, please re-login")
     login_manager.needs_refresh_message_category = "info"
 
-    
     init_resources(api)
-    if config.DEBUG:
-        register_error_handlers(APP)
+    register_error_handlers(APP)
     return APP
 
 @APP.before_request
 def before_request():
     session.permanent = True
-    APP.permanent_session_lifetime = timedelta(minutes=1)
+    APP.permanent_session_lifetime = timedelta(minutes=10)
 
 def init_resources(api):
     api.add_resource(ProductListResource, '/api/products/')
     api.add_resource(ProductResource, '/api/products/<int:element_ID>')
     api.add_resource(UserListResource, '/api/users/')
     api.add_resource(UserResource, '/api/users/<int:element_ID>')
+    api.add_resource(NotificationListResource, '/notifications/')
+    api.add_resource(NotificationResource, '/notifications/<int:noti_id>')
 
 
 def register_error_handlers(app:Flask):
