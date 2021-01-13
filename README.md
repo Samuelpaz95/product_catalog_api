@@ -1,4 +1,4 @@
-# The catalog (*unfinished*)
+# The catalog
 This is a catalog API to consult the products it offers
 
 This is a flask project of CRUD product and users
